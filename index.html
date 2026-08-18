@@ -1,1 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DEAD DROP — Public Cipher Feed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
 
+<div class="static-overlay" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <div class="brand">
+      <span class="brand-mark">◈</span>
+      <div class="brand-text">
+        <h1>DEAD DROP</h1>
+        <p class="brand-sub">encrypt a signal. leave it in the open. see who breaks it.</p>
+      </div>
+    </div>
+    <div class="dial" title="channel status">
+      <span class="dial-dot"></span>
+      <span id="feedStatus">listening…</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="panel" id="composePanel">
+    <div class="panel-head">
+      <span class="panel-eyebrow">01 — TRANSMIT</span>
+      <h2>Encrypt a message</h2>
+      <p class="panel-hint">Your message is encrypted with AES right here in your browser before it ever leaves. Only the ciphertext is broadcast to the feed — the key stays with you until someone finds it.</p>
+    </div>
+
+    <form id="composeForm" class="form" autocomplete="off">
+      <div class="field">
+        <label for="senderName">Your call sign <span class="opt">(shown publicly, optional)</span></label>
+        <input type="text" id="senderName" maxlength="40" placeholder="e.g. Ghost, Agent-7, anonymous" />
+      </div>
+
+      <div class="field">
+        <label for="plainMessage">Message</label>
+        <textarea id="plainMessage" rows="3" maxlength="500" placeholder="Write the message you want to hide…" required></textarea>
+      </div>
+
+      <div class="field">
+        <label for="secretKey">Secret key</label>
+        <input type="text" id="secretKey" placeholder="Whoever guesses this key can decrypt it" required />
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="submitBtn">
+        <span>Encrypt &amp; drop it in the feed</span>
+      </button>
+      <p class="form-status" id="composeStatus" role="status"></p>
+    </form>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head panel-head--row">
+      <div>
+        <span class="panel-eyebrow">02 — INTERCEPTS</span>
+        <h2>Public feed</h2>
+        <p class="panel-hint">Every dropped message lands here as ciphertext. Enter a name and a guessed key to try cracking one.</p>
+      </div>
+      <button class="btn btn-ghost" id="refreshBtn">↻ Refresh</button>
+    </div>
+
+    <div id="feedList" class="feed-list">
+      <p class="empty-state">Tuning in…</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>All encryption/decryption happens locally in your browser using AES. Nothing but ciphertext and the key you choose to reveal is ever sent anywhere.</p>
+  </div>
+</footer>
+
+<!-- decrypt modal -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+    <span class="panel-eyebrow">03 — ATTEMPT</span>
+    <h2 id="modalTitle">Crack this transmission</h2>
+    <div class="modal-cipher" id="modalCipher"></div>
+    <form id="decryptForm" class="form" autocomplete="off">
+      <div class="field">
+        <label for="crackerName">Your name <span class="opt">(so credit sticks if you're right)</span></label>
+        <input type="text" id="crackerName" maxlength="40" required placeholder="Who's cracking this?" />
+      </div>
+      <div class="field">
+        <label for="guessKey">Key guess</label>
+        <input type="text" id="guessKey" required placeholder="Enter the key" />
+      </div>
+      <button type="submit" class="btn btn-primary" id="decryptBtn">
+        <span>Attempt decryption</span>
+      </button>
+      <p class="form-status" id="decryptStatus" role="status"></p>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
